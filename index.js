@@ -10,8 +10,9 @@ app.post("/", async (req, res) => {
   const dateTime = new Date().toLocaleString("en-US", {
     timeZone: "Asia/Colombo",
   });
-  let date = dateTime.split(",")[0].replaceAll("/", "-");
-  let time = dateTime.split(",")[1];
+  const dandT = dateTime.split(",");
+  const date = dandT[0].replaceAll("/", "-");
+  const time = dandT[1];
 
   const { rsrp, rssi, temp, humidity } = JSON.parse(req.body);
   let ele = {
@@ -22,7 +23,7 @@ app.post("/", async (req, res) => {
     humidity,
   };
   console.log(ele);
-  updateDatabaseFile(ele);
+  updateDatabaseFile(ele, date);
   res.send("Data received");
 });
 
@@ -30,13 +31,8 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
-function updateDatabaseFile(ele) {
-  // Get date in XX-XX-XXXX format
-  const dateTime = new Date().toLocaleString("en-US", {
-    timeZone: "Asia/Colombo",
-  });
+function updateDatabaseFile(ele, date) {
   let arr = [];
-  let date = dateTime.split(",")[0].replaceAll("/", "-");
 
   const filePath = "./data/data-" + date + ".json";
 
